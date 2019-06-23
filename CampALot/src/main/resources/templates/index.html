@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+    
+    <head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>CampAlot</title>
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+		<link rel="stylesheet" th:href="@{/stylesheets/main.css}">
+	</head>
+	
+	<body>
+
+	<div th:replace="fragments/general.html :: header"></div>
+
+	<div style="width: 30%; margin: 25px auto;">
+		<div th:if="${param.registerSuccess}">
+			<div class="alert alert-info">You've successfully registered to
+				our awesome app!</div>
+		</div>
+		<div th:if="${param.loginSuccess}">
+			<div class="alert alert-info">Welcome Back, <span sec:authentication="name"></span>!</div>
+		</div>
+		<div th:if="${param.logoutSuccess}">
+			<div class="alert alert-info">Logged Out, Come Back Soon!</div>
+		</div>
+		<div th:if="${param.createSuccess}">
+			<div class="alert alert-info">You've Successfully Added A New Campground!</div>
+		</div>
+		<div th:if="${param.updateSuccess}">
+			<div class="alert alert-info">You've Successfully Updated A Campground!</div>
+		</div>
+		<div th:if="${param.deleteSuccess}">
+			<div class="alert alert-info">You've Successfully Deleted A Campground!</div>
+		</div>
+	</div>
+
+	<header class="jumbotron index_container">
+         <div class="container">
+             <h1><span class="glyphicon glyphicon-tent"></span> Welcome To CampAlot!</h1>
+             <p class="lead">View our hand-picked campgrounds from all over the world</p>
+             <p>
+                <a class="btn btn-primary btn-lg" th:href="@{/campgrounds/new}">Add New Campground</a>
+             </p>
+              <p>
+              <form action="#" method="GET" class="form-inline" id="campground-search">
+                <div class="form-group">
+                  <input type="text" name="search" placeholder="Campground search..." class="form-control">
+                </div>
+              </form>
+             </p>
+         </div>
+     </header>
+
+	<div sec:authorize="hasRole('ROLE_USER')">
+		<div class="row text-center flex-wrap" id="campground-grid">
+			<div th:each="campground : ${campgrounds}">
+				<div class="col-md-3 col-sm-6">
+					<div class="thumbnail">
+						<img th:src="${campground.image}">
+						<div class="caption">
+							<h4 th:text="${campground.name}"></h4>
+						</div>
+						<p>
+							<a th:href="@{/campgrounds/{id}(id=${campground.id})}"
+								class="btn btn-primary">More Info</a>
+						</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div th:replace="fragments/general.html :: footer"></div>
+
+</body>
+</html>

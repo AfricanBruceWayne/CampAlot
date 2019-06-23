@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+<link rel="stylesheet" th:href="@{/stylesheets/main.css}">
+<title>Welcome To CampAlot</title>
+</head>
+<body>
+
+<div th:replace="fragments/general.html :: header"></div>
+
+	<div class="row">
+		<div class="col-md-3">
+			<ul class="list-group">
+				<li
+					class="list-group-item d-flex justify-content-between align-items-center">
+					About <span th:text="*{name}"></span>
+				</li>
+				<li
+					class="list-group-item d-flex justify-content-between align-items-center">
+					Messages <span class="badge badge-primary badge-pill">8</span>
+				</li>
+				<li
+					class="list-group-item d-flex justify-content-between align-items-center">
+					Ratings <span class="badge badge-primary badge-pill">4.6</span>
+				</li>
+				<li
+					class="list-group-item d-flex justify-content-between align-items-center">
+					Comments <span class="badge badge-primary badge-pill">12</span>
+				</li>
+			</ul>
+			<div id="map"></div>
+		</div>
+		<div class="col-md-9">
+			<div class="thumbnail">
+				<img class="img-responsive" th:src="*{image}">
+				<div class="caption-full">
+					<!-- Add price variable -->
+					<h4 class="pull-right">R99.00 p/n</h4>
+					<h4>
+						<a th:text="*{name}"></a>
+					</h4>
+					<p th:text="*{description}"></p>
+					<p>
+						<!-- Add Time stamp -->
+						<em>Submitted by: <span sec:authentication="name"></span></em>
+					</p>
+					<div sec:authorize="hasRole('ROLE_USER')">
+						<a class="btn btn-warning"
+							th:href="@{/campgrounds/{id}(id=${campground.id})/edit}">Edit</a>
+						<form th:action="@{/campgrounds/{id}(id=${campground.id})/delete}"
+							method="POST" class="delete-form">
+							<button class="btn btn-danger">Delete</button>
+						</form>
+					</div>
+				</div>
+			</div>
+			<div class="well">
+				<div class="text-right">
+					<a class="btn btn-success"
+						th:href="@{/campgrounds/{id}(id=${campground.id})/comments/new}">Add
+						New Comment</a>
+				</div>
+				<hr>
+				<div th:each="comment : ${comments}">
+					<div class="row">
+						<div class="col-md-12">
+							<strong><span sec:authentication="name"></span></strong>
+							<!-- Add time stamp -->
+							<span class="pull-right"></span>
+							<div sec:authorize="hasRole('ROLE_USER')">
+								<div class="pull-right">
+									<a
+										th:href="@{/campgrounds/{id}(id=${campground.id})/comments/{id}(id=${comment.id})/edit}"
+										class="btn btn-xs btn-warning">EDIT</a>
+									<form class="delete-form"
+										th:action="@{/campgrounds/{id}(id=${campground.id})/comments/{id}(id=${comment.id})/delete"
+										method="POST">
+										<button class="btn btn-xs btn-danger">DELETE</button>
+									</form>
+								</div>
+							</div>
+							<hr>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div th:replace="fragments/general.html :: footer"></div>

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+<link rel="stylesheet" th:href="@{/stylesheets/main.css}">
+<title>Add A Campground</title>
+</head>
+<body>
+
+	<div th:replace="fragments/general.html :: header"></div>
+	
+	<div class="row">
+        <div style="width: 30%; margin: 25px auto;">
+        <div th:if="${param.createError}">
+			<div class="alert alert-info">Something went wrong, please try again</div>
+		</div>
+        <h1 style="text-align: center">Create a New Campground</h1>
+            <form th:action="@{/campgrounds}" method="POST">
+                <div class="form-group">
+                    <input class="form-control" type="text" name="name" id="name" placeholder="Enter Campground Name..." required>
+                </div>
+                <div class="form-group">
+                    <input class="form-control" type="text" name="image" id="image" title="Upload Campground" placeholder="Enter Image Url..." required>
+                </div>
+                <div class="form-group">
+                    <input class="form-control" type="number" name="cost" id="cost" placeholder="9.99" step="0.01" min="0" >
+                </div>
+                <div class="form-group">
+                    <input class="form-control" type="text" name="location" id="location" placeholder="Yosemite National Park, CA">
+                </div>
+                <div class="form-group">
+                    <input class="form-control" type="text" name="description" id="description" placeholder="Tell Us Your Experience..." required>
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-lg btn-primary btn-block">Submit!</button>
+                </div>
+            </form>
+            <a th:href="@{/campgrounds}">Go Back</a>
+        </div>
+    </div>
+	
+		<div th:replace="fragments/general.html :: footer"></div>
