@@ -1,25 +1,31 @@
 package zima.springboot.model;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Table;
+
+import org.hibernate.annotations.NaturalId;
 
 @Entity
+@Table(name = "roles")
 public class Role {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
-	private String name;
 	
+	@Enumerated(EnumType.STRING)
+    @NaturalId
+    @Column(name = "name")
+	private RoleName name;
 	
 	public Role() {
 		
-	}
-
-	public Role(String name) {
-		this.name = name;
 	}
 
 	public long getId() {
@@ -30,15 +36,14 @@ public class Role {
 		this.id = id;
 	}
 
-	public String getName() {
+	public RoleName getName() {
 		return name;
 	}
 
-	public void setName(String name) {
+	public void setName(RoleName name) {
 		this.name = name;
 	}
 
-	
 	
 	
 }

@@ -1,5 +1,6 @@
 package zima.springboot.model;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -7,17 +8,28 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 
 @Entity
 public class Comment {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	private long id;
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
+	
+	@Column(name = "name")
+    @NotBlank
+    @Size(min = 4, max = 50)
+    private String name;
+	
+	@Column(name = "body")
+    @NotBlank
+    @Size(max = 280, message = "Comment body must be maximum of 280 characters")
 	private String content;
 	
-	@ManyToOne
-	@JoinColumn(name = "user_id", nullable = false)
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "user_id")
 	private User user;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -28,24 +40,24 @@ public class Comment {
 		
 	}
 
-	public Comment(long id, String content) {
-		this.id = id;
+	public Comment(String content) {
 		this.content = content;
-	}
-	
-	public Comment(long id, String content, User user, Campground campground) {
-		this.id = id;
-		this.content = content;
-		this.user = user;
-		this.campground = campground;
 	}
 
-	public long getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(long id) {
+	public void setId(Long id) {
 		this.id = id;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	public String getContent() {
@@ -71,5 +83,4 @@ public class Comment {
 	public void setCampground(Campground campground) {
 		this.campground = campground;
 	}
-
 }

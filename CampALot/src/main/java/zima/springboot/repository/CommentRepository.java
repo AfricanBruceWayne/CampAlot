@@ -1,9 +1,15 @@
 package zima.springboot.repository;
 
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.repository.PagingAndSortingRepository;
+import org.springframework.stereotype.Repository;
 
 import zima.springboot.model.Comment;
 
-public interface CommentRepository extends JpaRepository<Comment, Long> {
+@Repository
+public interface CommentRepository extends PagingAndSortingRepository<Comment, Long> {
 
+	Page<Comment> findByCampgroundId(Long campgroundId, Pageable pageable);
+	
 }

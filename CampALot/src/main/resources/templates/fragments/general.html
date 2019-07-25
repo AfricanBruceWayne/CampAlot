@@ -9,31 +9,29 @@
 		<title>CampAlot</title>
 		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
-		<link rel="stylesheet" th:href="@{/stylesheets/main.css}">
+		<link rel="stylesheet" th:href="@{/stylesheets/style.css}">
+		<link rel="stylesheet" th:href="@{/stylesheets/landing-1.css}">
+		<link rel="stylesheet" th:href="@{/stylesheets/landing-2.css}">
 	</head>
 	<body>
 
 	<div th:fragment="header">
-		<nav class="navbar navbar-expand-md navbar-light bg-light">
+		<nav class="navbar navbar-expand-lg navbar-dark pb_navbar pb_scrolled-light" id="pb-navbar">
+			<div class="container">
 			<a th:href="@{/}" class="navbar-brand"><i class="fas fa-campground"></i> CampAlot</a>
-			<button type="button" class="navbar-toggler" data-toggle="collapse"
-				data-target="#navbarCollapse">
-				<span class="navbar-toggler-icon"></span>
+			<button class="navbar-toggler ml-auto" type="button" data-toggle="collapse" data-target="#probootstrap-navbar" aria-controls="probootstrap-navbar" aria-expanded="false" aria-label="Toggle navigation">
+				<span><i class="ion-navicon"></i></span>
 			</button>
-			<div class="collapse navbar-collapse" id="navbarCollapse">
-				<div class="navbar-nav">
-					<a th:href="@{/campgrounds}" class="nav-item nav-link active">Home</a> <a th:href="@{/about}"
-						class="nav-item nav-link">About</a> <a th:href="@{/bookings}"
-						class="nav-item nav-link">Bookings</a> <a th:href="@{/view}"
-						class="nav-item nav-link">View Campgrounds</a>
-				</div>
-				<div sec:authorize="isAnonymous()" class="navbar-nav ml-auto">
-					<a th:href="@{/signup}" class="nav-item nav-link">Sign-Up</a>
-					<a th:href="@{/login}" class="nav-item nav-link">Login</a>
-				</div>
-				<div sec:authorize="hasRole('ROLE_USER')" class="navbar-nav ml-auto">
-					<a th:href="@{/logout}" class="nav-item nav-link">Logout</a>
-				</div>
+			<ul class="collapse navbar-collapse" id="probootstrap-navbar">
+				<li class="nav-item"><a class="nav-link" th:href="@{/campgrounds}">Home</a></li>
+            <li class="nav-item"><a class="nav-link" th:href="@{/about}">About</a></li>
+            <li class="nav-item"><a class="nav-link" th:href="@{/bookings}">Bookings</a></li>
+            <li class="nav-item"><a class="nav-link" th:href="@{/pricing}">Pricing</a></li>
+            <li class="nav-item"><a class="nav-link" th:href="@{/faq}">FAQ</a></li>
+            <li class="nav-item cta-btn ml-xl-2 ml-lg-2 ml-md-0 ml-sm-0 ml-0"><a class="nav-link" th:href="@{/signup}"><span class="pb_rounded-4 px-4">Sign-Up</span></a></li>
+            <li class="nav-item cta-btn ml-xl-2 ml-lg-2 ml-md-0 ml-sm-0 ml-0"><a class="nav-link" th:href="@{/login}"><span class="pb_rounded-4 px-4">Login</span></a></li>
+            <li sec:authorize="hasRole('ROLE_USER')" class="nav-item cta-btn ml-xl-2 ml-lg-2 ml-md-0 ml-sm-0 ml-0"><a class="nav-link" th:href="@{/logout}"><span class="pb_rounded-4 px-4">Logout</span></a></li>
+				</ul>
 			</div>
 		</nav>
 	</div>
@@ -41,12 +39,27 @@
 
 
 	<div th:fragment="footer">
+	
+	<footer class="pb_footer bg-light" role="contentinfo">
+      <div class="container">
+        <div class="row text-center">
+          <div class="col">
+            <ul class="list-inline">
+              <li class="list-inline-item"><a href="#" class="p-2"><i class="fa fa-facebook"></i></a></li>
+              <li class="list-inline-item"><a href="#" class="p-2"><i class="fa fa-twitter"></i></a></li>
+              <li class="list-inline-item"><a href="#" class="p-2"><i class="fa fa-linkedin"></i></a></li>
+            </ul>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col text-center">
+            <p class="pb_font-14">&copy; ZIMA 2019. All Rights Reserved</p>
+          </div>
+        </div>
+      </div>
+    </footer>
 
-		<footer class="footer">
-			<div class="container">
-				<p class="text-white">&copy; ZIMA 2018</p>
-			</div>
-		</footer>
+		
 
 		<!-- jQuery CDN -->
 		<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"

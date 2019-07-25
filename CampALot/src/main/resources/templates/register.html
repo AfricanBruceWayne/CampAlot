@@ -9,7 +9,9 @@
 
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
-<link rel="stylesheet" th:href="@{/stylesheets/main.css}">
+<link rel="stylesheet" th:href="@{/stylesheets/style.css}">
+<link rel="stylesheet" th:href="@{/stylesheets/landing-1.css}">
+<link rel="stylesheet" th:href="@{/stylesheets/landing-2.css}">
 <title>SignUp To Our App</title>
 </head>
 <body>
@@ -25,16 +27,29 @@
 			<h1 style="text-align: center">Sign Up</h1>
 			<form th:action="@{/register}" th:object="${user}" method="POST" enctype="utf8">
 				<div class="form-group">
-					<input class="form-control" type="text" name="username"
+					<input class="form-control" type="text" name="Username"
 						placeholder="username">
+						<p th:each="error: ${#fields.errors('userName')}"
+						th:text="${error}">Validation error</p>
+				</div>
+				<div class="form-group">
+					<input class="form-control" type="text" name="email"
+						placeholder="Email">
+						<p th:each="error: ${#fields.errors('email')}"
+						th:text="${error}">Validation error</p>
 				</div>
 				<div class="form-group">
 					<input class="form-control" type="password" name="password"
-						placeholder="password">
+						placeholder="Password">
+						<p th:each="error: ${#fields.errors('password')}"
+						th:text="${error}">Validation error</p>
+				</div>
+				<div class="form-group">
+					<input class="form-control" type="password" name="matchingPassword"
+						placeholder="Confirm password">
 				</div>
 				<div class="form-group">
 					<button type="submit" class="btn btn-lg btn-primary btn-block">Sign Up!</button>
-					
 				</div>
 			</form>
 			<p><span>Already have an account? <a th:href="@{/login}">Login

@@ -3,39 +3,44 @@ package zima.springboot.controller;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
-import zima.springboot.exception.ResourceNotFoundException;
 import zima.springboot.model.Campground;
+import zima.springboot.payload.PagedResponse;
+import zima.springboot.security.CurrentUser;
+import zima.springboot.security.UserPrincipal;
 import zima.springboot.service.CampgroundService;
-import zima.springboot.service.CommentService;
+import zima.springboot.util.AppConstants;
 
 @RestController
 @RequestMapping("/campgrounds")
 public class CampgroundController {
 
-	@Autowired
-	private CampgroundService campgroundService;
+	private final CampgroundService campgroundService;
 	
 	@Autowired
-	private CommentService commentService;
+	private CampgroundController(CampgroundService campgroundService) {
+		this.campgroundService = campgroundService;
+	}
 	
 	// Index - Get All Campgrounds
 	@GetMapping
-	public ModelAndView getIndexPage() {
-		ModelAndView mav = new ModelAndView("index");
-		mav.addObject("campgrounds", campgroundService.getAllCampgrounds());
-		return mav;
-	}
+	public PagedResponse<Campground> getAllPosts(
+            @RequestParam(value = "page", required = false, defaultValue = AppConstants.DEFAULT_PAGE_NUMBER) Integer page,
+            @RequestParam(value = "size", required = false, defaultValue = AppConstants.DEFAULT_PAGE_SIZE) Integer size){
+    return campgroundService.getAllCampgrounds(10, 30);
+}
 	
 	// Create Campground Form
 	@GetMapping("/new")
@@ -45,22 +50,15 @@ public class CampgroundController {
 	
 	// Show - Get A Campground
 	@GetMapping("/{id}")
-	public ModelAndView showCampground(@PathVariable long id) throws ResourceNotFoundException {
-		ModelAndView mav = new ModelAndView("show");
-		mav.addObject("campground", campgroundService.getCampgroundById(id));
-		mav.addObject("comments", commentService.getAllComments());
-		return mav;
-	}
+	public ResponseEntity<?> getPost(@PathVariable(name = "id") Long id){
+        return campgroundService.getCampground(id);
+    }
 	
 	@PostMapping
-	public String addCampground(@Valid Campground campgrounds, BindingResult result, 
-			Model model) {
-		if (result.hasErrors()) {
-			return "newCampground?createError";
-		}
-		campgroundService.createCampground(campgrounds);
-		return "redirect:/campgrounds?createSuccess";
-	}
+	@PreAuthorize("hasRole('USER')")
+    public ResponseEntity<?> addPost(@Valid @RequestBody Campground campground, @CurrentUser UserPrincipal currentUser){
+        return campgroundService.addCampground(campground, currentUser);
+    }
 	
 	// EDIT - shows edit form for a campground
 	@GetMapping("/{id}/update")
@@ -69,17 +67,16 @@ public class CampgroundController {
 	}
 	
 	// PUT - updates campground in the database
-	@PatchMapping("/{id}/edit")
-	public String updateACampground(@PathVariable long id, Campground campgrounds) throws ResourceNotFoundException {
-		campgroundService.updateCampground(id, campgrounds);
-		return "redirect:/campgrounds?updateSuccess";
-	}
+	@PutMapping("/{id}")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    public ResponseEntity<?> updateCampground(@PathVariable(name = "id") Long id, @Valid @RequestBody Campground newCampground, @CurrentUser UserPrincipal currentUser){
+        return campgroundService.updateCampground(id, newCampground, currentUser);
+    }
 	
 	// DELETE - removes campground and its comments from the database
 	@DeleteMapping("/{id}")
-	public String deleteCampground(@PathVariable long id) throws ResourceNotFoundException {
-		campgroundService.deleteCamgpround(id);
-		return "redirect:/campgrounds?deleteSuccess";
-	}
-	
+	@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    public ResponseEntity<?> deleteCampground(@PathVariable(name = "id") Long id, @CurrentUser UserPrincipal currentUser){
+        return campgroundService.deleteCampground(id, currentUser);
+    }
 }

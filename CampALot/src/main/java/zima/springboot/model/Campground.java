@@ -2,6 +2,8 @@ package zima.springboot.model;
 
 import java.util.List;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -10,36 +12,56 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import zima.springboot.audit.UserDateAudit;
 
 @Entity
-public class Campground {
+@Table(name = "campgrounds", uniqueConstraints = {
+        @UniqueConstraint(columnNames = {
+                "name"
+        })
+})
+public class Campground extends UserDateAudit {
+	
+	private static final long serialVersionUID = 1L;
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	private long id;
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
+	
+	@Column(name = "name")
 	private String name;
+	
+	@Column(name = "image")
 	private String image;
+	
+	@Column(name = "description")
 	private String description;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "user_id")
 	private User user;
 	
-	@OneToMany(mappedBy = "campground")
+	@JsonIgnore
+	@OneToMany(mappedBy = "campground", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Comment> comments;
 	
 	public Campground() {
 		
 	}
 
-	public Campground (long id, String name, String image, String description) {
+	public Campground (Long id, String name, String image, String description) {
 		this.id = id;
 		this.name = name;
 		this.image = image;
 		this.description = description;
 	}
 
-	public Campground(long id, String name, String image, String description, User user, List<Comment> comments) {
+	public Campground(Long id, String name, String image, String description, User user, List<Comment> comments) {
 		this.id = id;
 		this.name = name;
 		this.image = image;
@@ -48,11 +70,11 @@ public class Campground {
 		this.comments = comments;
 	}
 
-	public long getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(long id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
